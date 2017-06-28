@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OAR Bench</title>
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="cy.css">
+    <link rel="stylesheet" href="js/alertifyjs/css/alertify.min.css">
+    <link rel="stylesheet" href="js/alertifyjs/css/themes/semantic.min.css">
+    <link rel="stylesheet" href="js/qTip/jquery.qtip.min.css">
+    <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="js/bootstrap/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="js/leaflet/leaflet.css">
+    <link rel="stylesheet" href="js/leaflet/leaflet-layer-overpass/dist/OverPassLayer.css">
+    <link rel="stylesheet" href="js/leaflet/leaflet-locationfilter/src/locationfilter.css">
+    <link rel="stylesheet" href="js/leaflet-sidebar/L.Control.Sidebar.css">
+    <link rel="stylesheet" href="js/leaflet-button/easy-button.css">
+    <link rel="stylesheet" href="js/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="js/leaflet-geocoder/Control.Geocoder.css">
+    <script type="text/javascript" src="js/resize.js"></script>
+    <script type="text/javascript" src="js/about.js"></script>
+    <script type="text/javascript" src="js/filehandler.js"></script>
+    <script type="text/javascript" src="js/jQuery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="js/alertifyjs/alertify.min.js"></script>
+    <script type="text/javascript" src="js/cytoscape/cytoscape.js"></script>
+    <script type="text/javascript" src="js/qTip/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="js/cytoscape-qTip/cytoscape-qtip.js"></script>
+    <script type="text/javascript" src="js/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/global.js"></script>
+    <script type="text/javascript" src="js/map.js"></script>
+    <script type="text/javascript" src="js/request/request.js"></script>
+    <script type="text/javascript" src="js/leaflet/leaflet.js"></script>
+    <script type="text/javascript" src="js/leaflet/leaflet-layer-overpass/dist/OverPassLayer.min.js"></script>
+    <script type="text/javascript" src="js/d3v3/d3.min.js"></script>
+    <script type="text/javascript" src="js/D3SvgOverlay/L.D3SvgOverlay.js"></script>
+    <script type="text/javascript" src="js/leaflet/leaflet-locationfilter/src/locationfilter.js"></script>
+    <script type="text/javascript" src="js/spin.min.js"></script>
+    <script type="text/javascript" src="js/leaflet-sidebar/L.Control.Sidebar.js"></script>
+    <script type="text/javascript" src="js/leaflet-button/easy-button.js"></script>
+    <script type="text/javascript" src="js/leaflet-geocoder/Control.Geocoder.js"></script>
+</head>
+<body>
+
+<div id="page-wrapper">
+    <!-- Static navbar -->
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><b>OAR Bench</b></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Display</a></li>
+                    <li onclick="displayAbout()"><a href="#about">About</a></li>
+                    <li onclick="javascript:window.location.href='mailto:oliver@math.umd.edu';"><a
+                            href="#contact">Contact Us</a></li>
+                    <li><a onclick="process.exit()">Exit</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div id="genContent" class="columns">
+        <div class="mapColumn">
+            <div id="mymap" class="map" tabindex="0">
+                <div id="buttonWrapper">
+                    <button id="generate">
+                        Generate Instance
+                        <input type="file" name="exportJsonElement" value="exportJsonDestination" id="exportJson"
+                               style="display:none;" nwsaveas="ExportedStreetNetwork.json">
+                    </button>
+                    <button id="numEdges">Estimate Instance Size</button>
+                </div>
+            </div>
+            <div id="sidebar">
+                <h1>Streets</h1>
+                <ul>
+                    <li><input type="checkbox" id="primary" checked="checked">Primary</li>
+                    <li><input type="checkbox" id="secondary" checked="checked">Secondary</li>
+                    <li><input type="checkbox" id="tertiary" checked="checked">Tertiary</li>
+                    <li><input type="checkbox" id="other" checked="checked">Other Roads</li>
+                    <li><input type="checkbox" id="foot" checked="checked">Footpaths / Cyclepaths</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!--Fixed footer -->
+    <footer>
+        <div class="navbar navbar-inverse navbar-fixed-bottom">
+        </div>
+    </footer>
+</div>
+
+<!-- for loading -->
+<div id ="center2" style="position:fixed;top:50%;left:50%;z-index:10000;"></div>
+
+<script>
+
+
+    var opts2 = {
+        lines: 13 // The number of lines to draw
+        , length: 28 // The length of each line
+        , width: 14 // The line thickness
+        , radius: 42 // The radius of the inner circle
+        , scale: .5 // Scales overall size of the spinner
+        , corners: 1 // Corner roundness (0..1)
+        , color: '#000' // #rgb or #rrggbb or array of colors
+        , opacity: 0.25 // Opacity of the lines
+        , rotate: 0 // The rotation offset
+        , direction: 1 // 1: clockwise, -1: counterclockwise
+        , speed: 1 // Rounds per second
+        , trail: 60 // Afterglow percentage
+        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+        , className: 'spinner' // The CSS class to assign to the spinner
+        , top: '50%' // Top position relative to parent
+        , left: '50%' // Left position relative to parent
+        , shadow: false // Whether to render a shadow
+        , hwaccel: false // Whether to use hardware acceleration
+        , position: 'absolute' // Element positioning
+    };
+    var target2 = $('#center2').get(0);
+    var spinner2 = new Spinner(opts2).spin(target2);
+    removeSpinner2();
+
+      var overlayGenerated = false;
+      var mmap = L.map('mymap').setView([51.505, -0.09], 13);
+      var sidebar = L.control.sidebar('sidebar', {
+          position: 'left',
+          closeButton: true,
+          autoPan: false
+      });
+
+      mmap.addControl(sidebar);
+      mmap.on('click', function () {
+            sidebar.hide();
+        })
+
+      L.easyButton('<span>&equiv;</span>', function(){
+          sidebar.show();
+      }).addTo(mmap);
+
+      var subSelect = false;
+      var extentArray;
+
+      //basemaps
+      var OpenStreetMap_Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	    maxZoom: 19,
+	    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(mmap);
+      var Esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+      }).addTo(mmap);
+
+      var baseMaps = {
+        "Open Street Maps" : OpenStreetMap_Mapnik,
+        "ESRI" : Esri_WorldImagery
+      };
+
+      //d3Layer
+      var streets = [];
+      var streetOverlay = L.d3SvgOverlay(function(sel, proj) {
+          var upd = sel.selectAll('path').data(streets);
+          upd.enter()
+            .append('path')
+            .attr('d', proj.pathFromGeojson)
+            .attr('stroke', 'red')
+            .attr('opacity', '0.8')
+            .attr('fill-opacity', '0');
+          upd.attr('stroke-width', 3 / proj.scale);
+        });
+
+        var layerControl = L.control.layers(baseMaps, {"Street Overlay" : streetOverlay}).addTo(mmap);
+
+        var locationFilter = new L.LocationFilter().addTo(mmap);
+
+        locationFilter.on("change", function (e) {
+            extentArray = e.bounds;
+        });
+
+        locationFilter.on("enabled", function () {
+            subSelect = true;
+            extentArray = locationFilter.getBounds();
+        });
+
+        locationFilter.on("disabled", function () {
+            subSelect = false;
+        });
+
+        L.Control.geocoder().addTo(mmap);
+
+      document.getElementById('generate').onclick = function(e) {
+        document.getElementById('exportJson').click();
+      };
+
+      document.getElementById('exportJson').addEventListener('change', exportJson);
+
+      document.getElementById('numEdges').onclick = function() {
+        addSpinner2();
+        estimateEdges();
+      };
+
+</script>
+
+</body>
+</html>

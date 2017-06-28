@@ -1,0 +1,207 @@
+.rows {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+}
+
+.row {
+    -webkit-box-flex: 1;
+    -moz-box-flex:  1;
+    -webkit-flex:  1;
+    -ms-flex:  1;
+    flex:  1;
+
+}
+
+.map {
+    top:0%;
+    width: 100%;
+    height: 95%;
+}
+
+.columns {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 100%;
+}
+
+.mapColumn {
+    -webkit-box-flex: 6;
+    -moz-box-flex: 6;
+    -webkit-flex: 6;
+    -ms-flex: 6;
+    flex:  6;
+}
+
+.optionsColumn {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex:  1;
+}
+
+html, body {
+   height: 100vh;
+   width: 100%;
+   margin: 0;
+   padding: 0;
+}
+
+#page-wrapper {
+   height: 90vh;
+   width: 100%;
+   margin: 0;
+   padding: 0;
+}
+
+#content{
+    z-index: -1000;
+}
+
+#displayTitle{
+    margin-left: 25px;
+}
+
+#removeElementsBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    bottom:10%;
+    z-index: 10;
+    display:none;
+}
+
+#clearRoutesBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    top:10%;
+    z-index: 10;
+    display:none;
+}
+
+#unrequireBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    bottom:15%;
+    z-index: 10;
+    display:none;
+}
+
+#depotBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    bottom:30%;
+    z-index: 10;
+    display:none;
+}
+
+#undepotBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    bottom:25%;
+    z-index: 10;
+    display:none;
+}
+
+#randomizeBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    bottom:35%;
+    z-index: 10;
+    display:none;
+}
+
+#nodeSizeButtons{
+    position:fixed;
+    left:4%;
+    top:20%;
+    z-index: 10;
+    display:none;
+}
+
+#edgeSizeButtons{
+    position:fixed;
+    left:4%;
+    top:24%;
+    z-index: 10;
+    display:none;
+}
+
+#instanceNodes{
+    position: fixed;
+    right: 15%;
+    top: 15%;
+    z-index: 10;
+    font-size: 25px;
+}
+
+#instanceEdges{
+    position: fixed;
+    right: 15%;
+    top: 10%;
+    z-index: 10;
+    font-size: 25px;
+}
+
+#requireBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    bottom:20%;
+
+    z-index: 10;
+    display:none;
+}
+
+#trimBtn{
+    position:fixed;
+    width: 200px;
+    right:2%;
+    bottom:40%;
+
+    z-index: 10;
+    display:none;
+}
+
+.mybtn{
+    width: 25px;
+}
+
+.myspan{
+    display: inline-block;
+    width: 75px;
+}
+
+ul.scroll-menu {
+    height: auto;
+    max-height: 250px;
+    overflow-x: hidden;
+}
+ul.scroll-menu-2x {
+    max-height: 230px;
+}
+
+#buttonWrapper {
+    position: absolute;
+    bottom: 20px;
+    right: 0%;
+    z-index: 9999;
+}

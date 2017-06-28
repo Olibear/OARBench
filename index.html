@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OAR Bench</title>
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="cy.css">
+    <link rel="stylesheet" href="js/alertifyjs/css/alertify.min.css">
+    <link rel="stylesheet" href="js/alertifyjs/css/themes/semantic.min.css">
+    <link rel="stylesheet" href="js/qTip/jquery.qtip.min.css">
+    <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="js/bootstrap/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="js/vex/dist/css/vex.css">
+    <link rel="stylesheet" href="js/vex/dist/css/vex-theme-wireframe.css">
+    <script type="text/javascript" src="js/resize.js"></script>
+    <script type="text/javascript" src="js/about.js"></script>
+    <script type="text/javascript" src="js/jQuery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="js/alertifyjs/alertify.min.js"></script>
+    <script type="text/javascript" src="js/cytoscape/cytoscape.js"></script>
+    <script type="text/javascript" src="js/qTip/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="js/cytoscape-qTip/cytoscape-qtip.js"></script>
+    <script type="text/javascript" src="js/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/global.js"></script>
+    <script type="text/javascript" src="js/vex/dist/js/vex.combined.min.js"></script>
+    <script type="text/javascript" src="js/spin.min.js"></script>
+    <script type="text/javascript" src="js/filehandler.js"></script>
+</head>
+<body>
+
+<div id="page-wrapper">
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><b>OAR Bench</b></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">File<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li id="openGraph">
+                                <a href="#">Open Graph</a>
+                            </li>
+                            <li id="openRoutesButton" class="disabled">
+                                <a href="#">Open Routes</a>
+
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="generate.html">Generate</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Export<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li id="exportCanvasButton" class="disabled">
+                                <a href="#">Export Canvas to Png</a>
+                                <input type="file" name="exportElement" value="exportDestination" id="export"
+                                       style="display:none;" nwsaveas="ExportedCanvas.png">
+                            </li>
+                            <li id="exportInstanceButton" class="disabled">
+                                <a href="#">Export Instance</a>
+                                <input type="file" name="exportInstanceElement" value="instanceDestination" id="exportInstance"
+                                       style="display:none;" nwsaveas="ExportedInstance.png">
+                            </li>
+                        </ul>
+                    </li>
+                    <li onclick="displayAbout()"><a href="#">About</a></li>
+                    <li onclick="javascript:window.location.href='mailto:oliver@math.umd.edu';"><a
+                            href="#contact">Contact Us</a></li>
+                    <li><a onclick="process.exit()">Exit</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <!-- inputs -->
+    <input type="file" name="fileUploadElement" value="uploadedFile" id="fileupload"
+           style="display:none;">
+    <input type="file" name="routeUploadElement" value="uploadedRoutes" id="routeupload"
+           style="display:none;">
+
+    <!--Fixed footer -->
+    <footer>
+        <div class="navbar navbar-inverse navbar-fixed-bottom">
+            <div class="container">
+                <div class="navbar-collapse collapse" id="footer-body">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown-toggle dropup"><a href="#" data-toggle="dropdown"><b
+                                class="icon-th-large icon-white"></b>Filters<span class="caret caret-up"></span></a>
+                            <ul id="filtersList" class="dropdown-menu scroll-menu dropup" role="menu">
+                                <li class="dropdown-header disabled"><a href="#">Filters</a></li>
+                                <li id="placeholderFilter" class="disabled"><a href="#">   N/A</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown-toggle dropup"><a href="#" data-toggle="dropdown"><b
+                                class="icon-th-large icon-white"></b>Layers<span class="caret caret-up"></span></a>
+                            <ul id="layersList" class="dropdown-menu scroll-menu dropup" role="menu">
+                                <li class="dropdown-header disabled"><a href="#">Routes</a></li>
+                                <li id="placeholderRoute" class="disabled"><a href="#">   N/A</a></li>
+                                <li id="networkHeading" class="dropdown-header disabled"><a href="#">Network</a></li>
+                                <li id="placeholderNetwork" class="disabled"><a href="#">   N/A</a></li>
+                            </ul>
+                        </li>
+                        <li id="clearCanvasButton"><a>Clear</a></li>
+                    </ul>
+                </div><!-- .nav-collapse -->
+            </div>
+        </div>
+    </footer>
+    <div id="content" class="rows">
+        <div id="titleText" class="row titleRow">
+            <h1 id="displayTitle" align="left">Please load a graph by clicking 'File' above.</h1>
+        </div>
+        <div id="cy" class="row"></div>
+    </div>
+
+</div>
+
+<!-- for loading -->
+<div id ="center" style="position:fixed;top:50%;left:50%;z-index:100;"></div>
+
+<div>
+    <button id="removeElementsBtn" type="button" class="btn btn-secondary disabled">Remove Elements</button>
+    <button id="unrequireBtn" type="button" class="btn btn-secondary disabled">Make Elements Unrequired</button>
+    <button id="requireBtn" type="button" class="btn btn-secondary disabled">Make Elements Required</button>
+    <button id="depotBtn" type="button" class="btn btn-secondary disabled">Make Node(s) Depot(s)</button>
+    <button id="undepotBtn" type="button" class="btn btn-secondary disabled">Remove Depot(s)</button>
+    <button id="clearRoutesBtn" type="button" class="btn btn-secondary disabled">Clear Routes</button>
+    <button id="randomizeBtn" type="button" class="btn btn-secondary disabled">Randomize</button>
+    <button id="trimBtn" type="button" class="btn btn-secondary disabled">Auto-Trim</button>
+    <div id="instanceNodes">
+        <span id="nodeSize" class="myspan2"><b>Nodes</b> :  N/A</span>
+    </div>
+    <div id="instanceEdges">
+        <span id="edgeSize" class="myspan2"><b>Edges</b> :  N/A</span>
+    </div>
+    <div id="nodeSizeButtons">
+        <span class="myspan">Node Size : </span>
+        <div class="btn-group btn-group-xs">
+            <button id="nodePlusBtn" type="button" class="btn btn-primary disabled mybtn"> + </button>
+            <button id="nodeMinusBtn" type="button" class="btn btn-primary disabled mybtn"> - </button>
+        </div>
+    </div>
+    <div id="edgeSizeButtons">
+        <span class="myspan">Edge Size : </span>
+        <div class="btn-group btn-group-xs">
+            <button id="edgePlusBtn" type="button" class="btn btn-primary disabled mybtn"> + </button>
+            <button id="edgeMinusBtn" type="button" class="btn btn-primary disabled mybtn"> - </button>
+        </div>
+    </div>
+</div>
+<script>
+
+    document.body.style.overflow = "hidden";
+
+    var zoomLevel = 1;
+    var pos = [];
+    var depotId = -1;
+    var nodeSize = 6;
+    var edgeWidth = 6;
+    var fontSize = 10;
+
+    var opts = {
+        lines: 13 // The number of lines to draw
+        , length: 28 // The length of each line
+        , width: 14 // The line thickness
+        , radius: 42 // The radius of the inner circle
+        , scale: .5 // Scales overall size of the spinner
+        , corners: 1 // Corner roundness (0..1)
+        , color: '#000' // #rgb or #rrggbb or array of colors
+        , opacity: 0.25 // Opacity of the lines
+        , rotate: 0 // The rotation offset
+        , direction: 1 // 1: clockwise, -1: counterclockwise
+        , speed: 1 // Rounds per second
+        , trail: 60 // Afterglow percentage
+        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+        , className: 'spinner' // The CSS class to assign to the spinner
+        , top: '50%' // Top position relative to parent
+        , left: '50%' // Left position relative to parent
+        , shadow: false // Whether to render a shadow
+        , hwaccel: false // Whether to use hardware acceleration
+        , position: 'absolute' // Element positioning
+    };
+    var target = $('#center').get(0);
+    var spinner = new Spinner(opts).spin(target);
+    removeSpinner();
+
+    alertify.set('notifier','position', 'top-right');
+
+    $(document).on('click', 'li.disabled', function (e) {
+      e.stopPropagation();
+    });
+
+
+    $(document).on('click', '#openGraph', function (e) {
+        document.getElementById('fileupload').click();
+    });
+
+    $(document).on('click', '#exportInstanceButton', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        exportInstance();
+      }
+    });
+
+    $(document).on('click', '#removeElementsBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        removeSelectedElements();
+        onChange();
+      }
+    });
+
+    $(document).on('click', '#unrequireBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        makeSelectedElementsUnrequired();
+      }
+    });
+
+    $(document).on('click', '#requireBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        makeSelectedElementsRequired();
+      }
+    });
+
+    $(document).on('click', '#clearRoutesBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        clearRoutes();
+      }
+    });
+
+    $(document).on('click', '#depotBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        makeSelectedNodesDepots();
+      }
+    });
+
+    $(document).on('click', '#undepotBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        unmakeSelectedNodesDepots();
+      }
+    });
+
+    $(document).on('click', '#randomizeBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        randomize();
+      }
+    });
+    $(document).on('click', '#clearCanvasButton', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        clearCanvas();
+      }
+    });
+
+    $(document).on('click', '#nodePlusBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        increaseNodeSize();
+      }
+    });
+
+    $(document).on('click', '#nodeMinusBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        decreaseNodeSize();
+      }
+    });
+
+    $(document).on('click', '#edgePlusBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        increaseEdgeSize();
+      }
+    });
+
+    $(document).on('click', '#edgeMinusBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        decreaseEdgeSize();
+      }
+    });
+
+    $(document).on('click', '#trimBtn', function (e) {
+      if($(this).hasClass('disabled')) {
+        e.stopPropagation();
+      }
+      else {
+        addSpinner();
+        setTimeout(trim, 100);
+      }
+    });
+
+    document.getElementById('fileupload').addEventListener('change', handleFiles);
+    document.getElementById('routeupload').addEventListener('change', handleRoutes);
+    document.getElementById('export').addEventListener('change', exportCanvas);
+    document.getElementById('exportInstance').addEventListener('change', exportInstance);
+
+    //draw the graph
+    var cy = cytoscape({
+        container: document.getElementById('cy'),
+
+        elements: [],
+
+        style: [ // the stylesheet for the graph
+           {
+             selector: 'node',
+             style: {
+               'background-color': '#666',
+               'width': 6,
+               'height': 6,
+               'font-size': 10,
+               'label': 'data(id)',
+               'min-zoomed-font-size': 12
+             }
+           },
+
+           {
+             selector: 'edge',
+             style: {
+               'curve-style':'haystack',
+               'control-point-step-size':40,
+               'width': 6,
+               'line-color': 'black',
+               'target-arrow-color': 'black',
+               'target-arrow-shape': 'none',
+               'min-zoomed-font-size':12
+             }
+           },
+
+           {
+             selector: 'node.depot',
+             style: {
+                 'background-color': '#0008e6',
+                 'shape':'triangle'
+             }
+           },
+
+
+           {
+             selector: 'edge.dotted',
+             style: {
+                 'line-color': 'red',
+                 'target-arrow-color': 'red',
+                 //'line-style':'dotted',
+                 //'opacity':'0.5',
+                 'height':'6',
+                 'width':'6',
+                 'font-size':'12'
+             }
+           },
+
+
+           {
+             selector: ':selected',
+             style: {
+               'background-color':'green',
+               'border-width':5,
+               'border-style':'double',
+               'line-color':'green',
+               'target-arrow-color':'green',
+               'opacity':'1'
+             }
+           },
+
+           {
+             selector: 'node.semitransp',
+             style: {
+               'opacity':'0.5'
+             }
+           },
+
+           {
+             selector: 'edge.semitransp',
+             style: {
+               'opacity':'0.4'
+             }
+           },
+
+           {
+             selector: 'node.neighbor',
+             style: {
+                 'border-color': '#000',
+                 'border-width': '2px'
+             }
+           },
+
+           {
+             selector: 'edge.neighbor',
+             style: {
+                'target-arrow-color': '#000',
+                'line-color': '#000'
+              }
+           },
+
+           {
+             selector: 'node.highlight',
+             style: {
+                 'background-color': '#000'
+             }
+           },
+
+           {
+             selector: 'edge.highlight',
+             style: {
+                'target-arrow-color': '#000',
+                'width': 5,
+                'line-color': '#000'
+             }
+           }
+         ],
+
+         ready: function(){
+            window.cy = this;
+          },
+
+         layout: {
+           name: 'preset'
+        },
+
+        // initial viewport state:
+        zoom: 1,
+
+        pan: { x: 200, y: 200 },
+
+        // interaction options:
+        minZoom: 1e-50,
+        maxZoom: 1e50,
+        zoomingEnabled: true,
+        userZoomingEnabled: true,
+        panningEnabled: true,
+        userPanningEnabled: true,
+        boxSelectionEnabled: true,
+        selectionType: 'single',
+        touchTapThreshold: 8,
+        desktopTapThreshold: 4,
+        autolock: true,
+        autoungrabify: false,
+        autounselectify: false,
+
+        // rendering options:
+        headless: false,
+        styleEnabled: true,
+        hideEdgesOnViewport: false,
+        hideLabelsOnViewport: true,
+        textureOnViewport: true,
+        motionBlur: false,
+        motionBlurOpacity: 0.2,
+        wheelSensitivity: 1,
+        pixelRatio: 1
+
+    });
+</script>
+
+</body>
+</html>

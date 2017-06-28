@@ -1,0 +1,19 @@
+{
+  "name": "oarbench",
+  "version": "1.0.0",
+  "description": "Instance generation and visualization utility for arc routing problems.",
+  "main": "generate.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "window": {
+    "fullscreen": true,
+    "min_width": 1024,
+    "min_height": 768
+  },
+  "author": "oliverlum",
+  "license": "ISC",
+  "dependencies": {
+    "leaflet-geosearch": "^2.2.0"
+  }
+}

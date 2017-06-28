@@ -1,0 +1,39 @@
+{
+  "name": "vex-js",
+  "version": "3.0.0",
+  "description": "Beautiful, functional dialogs in vanilla JavaScript",
+  "contributors": [
+    "Adam Schwartz <aschwartz@hubspot.com>",
+    "Brendan Batliner <brendan@omnipointment.com>",
+    "Mark Stosberg <mark@rideamigos.com>"
+  ],
+  "license": "MIT",
+  "main": "dist/js/vex.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HubSpot/vex.git"
+  },
+  "dependencies": {
+    "classlist-polyfill": "1.0.3",
+    "domify": "1.4.0",
+    "es6-object-assign": "1.0.2",
+    "vex-dialog": "1.0.6"
+  },
+  "devDependencies": {
+    "grunt": "1.0.1",
+    "grunt-browserify": "5.0.0",
+    "grunt-contrib-compass": "1.1.1",
+    "grunt-contrib-uglify": "1.0.1",
+    "grunt-sass": "1.2.0",
+    "standard": "7.1.2"
+  },
+  "scripts": {
+    "test": "standard",
+    "build": "grunt"
+  },
+  "standard": {
+    "ignore": [
+      "/dist"
+    ]
+  }
+}
