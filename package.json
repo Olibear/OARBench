@@ -1,19 +1,35 @@
 {
   "name": "oarbench",
   "version": "1.0.0",
-  "description": "Instance generation and visualization utility for arc routing problems.",
+  "description": "Benchmark instance generation based on real street network data for arc routing problems.",
   "main": "generate.html",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "dependencies": {
+    "osmtogeojson": "^2.2.12",
+    "request": "^2.79.0"
   },
   "window": {
     "fullscreen": true,
     "min_width": 1024,
     "min_height": 768
   },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Olibear/OARBench.git"
+  },
+  "keywords": [
+    "Arc",
+    "Routing",
+    "Benchmark",
+    "Instance"
+  ],
   "author": "oliverlum",
   "license": "ISC",
-  "dependencies": {
-    "leaflet-geosearch": "^2.2.0"
-  }
+  "bugs": {
+    "url": "https://github.com/Olibear/OARBench/issues"
+  },
+  "homepage": "https://github.com/Olibear/OARBench#readme"
 }
